@@ -1,0 +1,32 @@
+<!--
+    html file for show all section portion of quotes app
+-->
+{% extends 'quotes/base.html' %}
+
+{% block title %}All Quotes - Quotes App{% endblock %}
+
+{% block header %}All Quotes and Images{% endblock %}
+
+{% block content %}
+<h2>All Quotes</h2>
+<div class="grid">
+    {% for quote in quotes %}
+    <div class="quote-item">
+        <p>"{{ quote }}"</p>
+    </div>
+    {% endfor %}
+</div>
+
+<h2 class="spaced">All Images</h2>
+<div class="grid">
+    {% for image in images %}
+    <div class="image-item">
+        <img src="{{ image }}" alt="Portrait {{ forloop.counter }}">
+    </div>
+    {% endfor %}
+</div>
+
+<div class="spaced centered">
+    <a href="{% url 'quotes:quote' %}" class="btn">Back to Random Quote</a>
+</div>
+{% endblock %}

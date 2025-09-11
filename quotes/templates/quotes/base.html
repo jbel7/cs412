@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Tesla Quotes App{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'quotes/css/style.css' %}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>{% block header %}Tesla's Electric Wisdom{% endblock %}</h1>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <a href="{% url 'quotes:home' %}">Home</a>
+            <a href="{% url 'quotes:quote' %}">Random Quote</a>
+            <a href="{% url 'quotes:show_all' %}">All Quotes</a>
+            <a href="{% url 'quotes:about' %}">About</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="content">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Tesla Quotes App. Created as part of CS412 project.</p>
+        </div>
+    </footer>
+</body>
+</html>

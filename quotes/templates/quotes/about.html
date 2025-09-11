@@ -1,0 +1,29 @@
+<!--
+    html file for about section of quotes app
+-->
+
+{% extends 'quotes/base.html' %}
+
+{% block title %}About - Tesla Quotes App{% endblock %}
+
+{% block header %}About{% endblock %}
+
+{% block content %}
+<div class="about-section">
+    <h2>About {{ person_name }}</h2>
+    <div class="about-person">
+        <p>{{ person_bio }}</p>
+    </div>
+    
+    <h2>About the Creator</h2>
+    <div class="about-creator">
+        <h3>{{ creator_name }}</h3>
+        <p>{{ creator_info }}</p>
+        <p>This web application was created as part of the CS412 course project. It demonstrates the use of Django views, templates, and URL routing to create a dynamic quotes application featuring the brilliant mind of Nikola Tesla.</p>
+    </div>
+    
+    <div class="spaced centered">
+        <a href="{% url 'quotes:quote' %}" class="btn">Back to Quotes</a>
+    </div>
+</div>
+{% endblock %}

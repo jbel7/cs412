@@ -1,0 +1,24 @@
+<!--
+    html file for quotes section of quotes app
+-->
+{% extends 'quotes/base.html' %}
+
+{% block title %}Random Quote - Quotes App{% endblock %}
+
+{% block header %}Inspirational Quote{% endblock %}
+
+{% block content %}
+<div class="quote-container">
+    <div class="quote-text">
+        "{{ quote }}"
+    </div>
+    
+    <div>
+        <img src="{{ image }}" alt="Portrait" class="quote-image">
+    </div>
+    
+    <div class="spaced">
+        <a href="{% url 'quotes:quote' %}" class="btn">Get Another Quote</a>
+    </div>
+</div>
+{% endblock %}

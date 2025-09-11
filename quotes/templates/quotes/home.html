@@ -1,0 +1,20 @@
+{% extends 'quotes/base.html' %}
+
+{% block title %}Home - Tesla Quotes App{% endblock %}
+
+{% block header %}Welcome{% endblock %}
+
+{% block content %}
+<div class="home-container">
+    <div class="home-image">
+        <img src="{{ image }}" alt="Nikola Tesla Portrait">
+    </div>
+    <div class="home-text">
+        <p>
+            Nikola Tesla was a visionary inventor, electrical engineer, and futurist whose innovations
+            shaped the modern world. His brilliance continues to inspire generations to dream boldly
+            and think differently.
+        </p>
+    </div>
+</div>
+{% endblock %}
