@@ -1,0 +1,112 @@
+{% extends 'restaurant/base.html' %}
+
+{% load static %}
+
+{% block title %}Order Confirmation - Crown Chicken and Gyro{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="text-align: center; margin-bottom: 2rem;">
+        <h1 style="color: #28a745; margin-bottom: 1rem;">✅ Order Confirmed!</h1>
+        <div style="background: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 1rem; border-radius: 8px; margin-bottom: 2rem;">
+            <strong>Order #{{ order_number }}</strong><br>
+            Thank you for your order, {{ customer_info.name }}!
+        </div>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+        <div>
+            <h2 style="color: #8B4513; margin-bottom: 1rem; border-bottom: 2px solid #8B4513; padding-bottom: 0.5rem;">
+                🍽️ Your Order
+            </h2>
+            
+            {% if ordered_items %}
+                {% for item in ordered_items %}
+                <div style="background: #f8f9fa; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; border-left: 4px solid #8B4513;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                        <strong style="color: #333;">{{ item.name }}</strong>
+                        <span class="price">${{ item.price|floatformat:2 }}</span>
+                    </div>
+                    
+                    {% if item.extras %}
+                        <div style="color: #666; font-size: 0.9rem;">
+                            <strong>Extra Toppings:</strong> {{ item.extras|join:", " }}
+                        </div>
+                    {% endif %}
+                    
+                    {% if item.protein %}
+                        <div style="color: #666; font-size: 0.9rem;">
+                            <strong>Added Protein:</strong> {{ item.protein }}
+                        </div>
+                    {% endif %}
+                    
+                    {% if item.sides %}
+                        <div style="color: #666; font-size: 0.9rem;">
+                            <strong>Sides:</strong> {{ item.sides|join:", " }}
+                        </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                
+                <div style="background: #8B4513; color: white; padding: 1rem; border-radius: 8px; text-align: center; margin-top: 1rem;">
+                    <strong style="font-size: 1.2rem;">Total: ${{ total_price }}</strong>
+                </div>
+            {% else %}
+                <p style="color: #666; font-style: italic;">No items selected.</p>
+            {% endif %}
+        </div>
+        
+        <div>
+            <h2 style="color: #8B4513; margin-bottom: 1rem; border-bottom: 2px solid #8B4513; padding-bottom: 0.5rem;">
+                👤 Customer Information
+            </h2>
+            
+            <div style="background: #f8f9fa; border-radius: 8px; padding: 1.5rem;">
+                <div style="margin-bottom: 1rem;">
+                    <strong>Name:</strong> {{ customer_info.name }}
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <strong>Phone:</strong> {{ customer_info.phone }}
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <strong>Email:</strong> {{ customer_info.email }}
+                </div>
+                
+                {% if customer_info.special_instructions %}
+                <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #ddd;">
+                    <strong>Special Instructions:</strong>
+                    <div style="background: white; padding: 0.75rem; border-radius: 4px; margin-top: 0.5rem; font-style: italic;">
+                        "{{ customer_info.special_instructions }}"
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div style="background: linear-gradient(135deg, #FFD700, #FFA500); color: #333; padding: 1.5rem; border-radius: 8px; text-align: center; margin-bottom: 2rem;">
+        <h2 style="margin-bottom: 1rem;">⏰ Estimated Ready Time</h2>
+        <div style="font-size: 1.3rem; font-weight: bold;">
+            {{ ready_time|date:"l, F j, Y \a\t g:i A" }}
+        </div>
+        <div style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.8;">
+            Your order will be ready for pickup in approximately {{ ready_time|timeuntil }}.
+        </div>
+    </div>
+    
+    <div style="background: #e7f3ff; border: 1px solid #b8daff; color: #004085; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+        <h3 style="margin-bottom: 1rem;">📋 What's Next?</h3>
+        <ul style="margin: 0; padding-left: 1.5rem;">
+            <li style="margin-bottom: 0.5rem;">We're preparing your order now!</li>
+            <li style="margin-bottom: 0.5rem;">You'll receive a confirmation email shortly</li>
+            <li style="margin-bottom: 0.5rem;">We'll call you when your order is ready for pickup</li>
+            <li>Please bring your order number: <strong>#{{ order_number }}</strong></li>
+        </ul>
+    </div>
+    
+    <div style="text-align: center;">
+        <a href="{% url 'main' %}" class="btn btn-secondary" style="margin-right: 1rem;">← Back to Home</a>
+        <a href="{% url 'order' %}" class="btn">Place Another Order</a>
+    </div>
+</div>
+{% endblock %}

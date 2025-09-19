@@ -1,0 +1,173 @@
+{% extends 'restaurant/base.html' %}
+
+{% load static %}
+
+{% block title %}Order Online - Crown Chicken and Gyro{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1 style="text-align: center; color: #8B4513; margin-bottom: 2rem;">Place Your Order</h1>
+    
+    <form method="post" action="{% url 'confirmation' %}">
+        {% csrf_token %}
+        
+        <h2 style="color: #8B4513; margin-bottom: 1.5rem; border-bottom: 2px solid #8B4513; padding-bottom: 0.5rem;">
+            🌟 Today's Special
+        </h2>
+        
+        <div class="menu-item special">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <input type="checkbox" id="daily_special" name="daily_special" value="true">
+                <label for="daily_special" style="font-size: 1.2rem; font-weight: bold; margin: 0;">
+                    {{ daily_special.name }}
+                </label>
+                <span class="price">${{ daily_special.price }}</span>
+            </div>
+            <p style="color: #666; margin-bottom: 0;">{{ daily_special.description }}</p>
+            <input type="hidden" name="daily_special_name" value="{{ daily_special.name }}">
+            <input type="hidden" name="daily_special_price" value="{{ daily_special.price }}">
+        </div>
+        
+        <h2 style="color: #8B4513; margin: 2rem 0 1.5rem 0; border-bottom: 2px solid #8B4513; padding-bottom: 0.5rem;">
+            🍗 Crown Chicken and Gyro Menu
+        </h2>
+        
+        <!-- Chicken Kabob -->
+        <div class="menu-item">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <input type="checkbox" id="chicken_kabob" name="chicken_kabob" value="true">
+                <label for="chicken_kabob" style="font-size: 1.1rem; font-weight: bold; margin: 0;">
+                    Chicken Kabob with Yellow Rice Only
+                </label>
+                <span class="price">$10.99</span>
+            </div>
+            <p style="color: #666; margin-bottom: 1rem;">Tender marinated chicken kabob grilled to perfection, served over fragrant yellow rice</p>
+            
+            <div style="margin-left: 2rem;">
+                <label style="font-weight: bold; margin-bottom: 0.5rem; display: block;">Add Extras (+$2.00 each):</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="gyro_tzatziki" name="gyro_extras" value="Extra Tzatziki">
+                        <label for="gyro_tzatziki">Extra Tzatziki</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="gyro_pita" name="gyro_extras" value="Pita Bread">
+                        <label for="gyro_pita">Pita Bread</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Beef Patty -->
+        <div class="menu-item">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <input type="checkbox" id="beef_patty" name="beef_patty" value="true">
+                <label for="beef_patty" style="font-size: 1.1rem; font-weight: bold; margin: 0;">
+                    Beef Patty
+                </label>
+                <span class="price">$3.99</span>
+            </div>
+            <p style="color: #666; margin-bottom: 1rem;">Golden flaky pastry filled with seasoned ground beef</p>
+            
+            <div style="margin-left: 2rem;">
+                <label style="font-weight: bold; margin-bottom: 0.5rem; display: block;">Add Extras (+$0.50 each):</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="patty_cheese" name="patty_extras" value="Extra Cheese">
+                        <label for="patty_cheese">Extra Cheese</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="patty_hot" name="patty_extras" value="Make it Spicy">
+                        <label for="patty_hot">Make it Spicy</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <h2 style="color: #8B4513; margin: 2rem 0 1.5rem 0; border-bottom: 2px solid #8B4513; padding-bottom: 0.5rem;">
+            📝 Special Instructions
+        </h2>
+        
+        <div class="form-group">
+            <label for="special_instructions">Any special requests or dietary restrictions?</label>
+            <textarea id="special_instructions" name="special_instructions" rows="3" 
+                      placeholder="Please let us know about any allergies, spice preferences, or special preparation requests..."></textarea>
+        </div>
+        
+        <h2 style="color: #8B4513; margin: 2rem 0 1.5rem 0; border-bottom: 2px solid #8B4513; padding-bottom: 0.5rem;">
+            👤 Customer Information
+        </h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+            <div class="form-group">
+                <label for="customer_name">Full Name *</label>
+                <input type="text" id="customer_name" name="customer_name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="customer_phone">Phone Number *</label>
+                <input type="tel" id="customer_phone" name="customer_phone" required 
+                       placeholder="(555) 123-4567">
+            </div>
+            
+            <div class="form-group" style="grid-column: 1 / -1;">
+                <label for="customer_email">Email Address *</label>
+                <input type="email" id="customer_email" name="customer_email" required 
+                       placeholder="your.email@example.com">
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #ddd;">
+            <button type="submit" class="btn" style="font-size: 1.1rem; padding: 15px 30px;">
+                🛒 Place Order
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}item">
+                        <input type="checkbox" id="kabob_salad" name="kabob_extras" value="Side Salad">
+                        <label for="kabob_salad">Side Salad</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="kabob_sauce" name="kabob_extras" value="Extra White Sauce">
+                        <label for="kabob_sauce">Extra White Sauce</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="kabob_pita" name="kabob_extras" value="Pita Bread">
+                        <label for="kabob_pita">Pita Bread</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mozzarella Sticks -->
+        <div class="menu-item">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <input type="checkbox" id="mozzarella_sticks" name="mozzarella_sticks" value="true">
+                <label for="mozzarella_sticks" style="font-size: 1.1rem; font-weight: bold; margin: 0;">
+                    6 Piece Mozzarella Sticks
+                </label>
+                <span class="price">$6.99</span>
+            </div>
+            <p style="color: #666; margin-bottom: 0;">Golden crispy mozzarella sticks served with marinara dipping sauce</p>
+        </div>
+        
+        <!-- Lamb Gyro -->
+        <div class="menu-item">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <input type="checkbox" id="lamb_gyro" name="lamb_gyro" value="true">
+                <label for="lamb_gyro" style="font-size: 1.1rem; font-weight: bold; margin: 0;">
+                    Lamb Gyro with Yellow Rice Only
+                </label>
+                <span class="price">$10.99</span>
+            </div>
+            <p style="color: #666; margin-bottom: 1rem;">Seasoned lamb gyro meat served over yellow rice with our signature white sauce</p>
+            
+            <div style="margin-left: 2rem;">
+                <label style="font-weight: bold; margin-bottom: 0.5rem; display: block;">Add Extras (+$1.50 each):</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="gyro_salad" name="gyro_extras" value="Side Salad">
+                        <label for="gyro_salad">Side Salad</label>
+                    </div>
+                    <div class="checkbox-
