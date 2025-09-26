@@ -34,6 +34,22 @@
             object-fit: cover;
             border: 2px solid #e1e8ed;
         }
+        .profile-image-large {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #e1e8ed;
+        }
+        .clickable-profile {
+        text-decoration: none;
+        color: inherit;
+        cursor: pointer;
+        }
+        .clickable-profile:hover {
+        text-decoration: none;
+        color: inherit;
+        }
         footer {
             margin-top: 50px;
             padding: 20px 0;
@@ -67,6 +83,11 @@
     <!-- Footer -->
     <footer class="text-center text-muted">
         <div class="container">
+            <p>
+                <a href="{% url 'show_all_profiles' %}" class="text-decoration-none">
+                    <i class="fas fa-home"></i> Back to All Profiles
+                </a>
+            </p>
             <p>&copy; Jed's Mini Instagram</p>
         </div>
     </footer>

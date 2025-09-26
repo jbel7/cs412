@@ -19,12 +19,14 @@
     <div class="col-lg-4 col-md-6 col-12 mb-4">
         <div class="profile-card p-4 h-100">
             <div class="text-center">
-                <img src="{{ profile.profile_image_url }}" 
-                     alt="{{ profile.display_name }}" 
-                     class="profile-image mb-3"
-                     onerror="this.src='https://via.placeholder.com/80x80/cccccc/666666?text=No+Image'">
-                
-                <h5 class="mb-1">{{ profile.display_name }}</h5>
+                <a href="{% url 'show_profile' profile.pk %}" class="clickable-profile">
+                    <img src="{{ profile.profile_image_url }}" 
+                         alt="{{ profile.display_name }}" 
+                         class="profile-image mb-3"
+                         onerror="this.src='https://via.placeholder.com/80x80/cccccc/666666?text=No+Image'">
+                    
+                    <h5 class="mb-1">{{ profile.display_name }}</h5>
+                </a>
                 <p class="text-muted small mb-2">@{{ profile.username }}</p>
                 
                 <p class="text-muted small mb-3">{{ profile.bio_text }}</p>
@@ -33,6 +35,10 @@
                     <i class="fas fa-calendar-alt"></i> 
                     Joined {{ profile.join_date|date:"M d, Y" }}
                 </p>
+                
+                <a href="{% url 'show_profile' profile.pk %}" class="btn btn-outline-primary btn-sm">
+                    View Profile
+                </a>
             </div>
         </div>
     </div>

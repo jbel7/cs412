@@ -1,0 +1,72 @@
+<!---  individual profile template-->
+
+{% extends 'mini_insta/base.html' %}
+
+{% block title %}{{ profile.display_name }} (@{{ profile.username }}) - Mini Instagram{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-12">
+        <!-- Profile Header -->
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <div class="row align-items-center">
+                    <div class="col-md-4 text-center mb-3 mb-md-0">
+                        <img src="{{ profile.profile_image_url }}" 
+                             alt="{{ profile.display_name }}" 
+                             class="profile-image-large mb-3"
+                             onerror="this.src='https://via.placeholder.com/150x150/cccccc/666666?text=No+Image'">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="d-flex flex-column flex-md-row align-items-md-center mb-3">
+                            <h2 class="mb-2 mb-md-0 me-md-4">{{ profile.username }}</h2>
+                            <button class="btn btn-primary btn-sm me-2">Follow</button>
+                            <button class="btn btn-outline-secondary btn-sm">Message</button>
+                        </div>
+                        
+                        <!-- Stats Placeholders -->
+                        <div class="d-flex mb-3">
+                            <div class="me-4">
+                                <strong>0</strong> posts
+                            </div>
+                            <div class="me-4">
+                                <strong>0</strong> followers
+                            </div>
+                            <div class="me-4">
+                                <strong>0</strong> following
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h5 class="mb-1">{{ profile.display_name }}</h5>
+                            <p class="mb-2">{{ profile.bio_text }}</p>
+                            <p class="text-muted small mb-0">
+                                <i class="fas fa-calendar-alt"></i> 
+                                Joined {{ profile.join_date|date:"F d, Y" }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Posts Section Placeholder -->
+        <div class="mt-4">
+            <div class="d-flex align-items-center justify-content-center border-top pt-3">
+                <i class="fas fa-th me-2"></i>
+                <span class="fw-bold">POSTS</span>
+            </div>
+            
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="text-center py-5">
+                        <i class="fas fa-camera fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">No posts yet</p>
+                        <p class="text-muted small">When {{ profile.display_name }} shares photos, you'll see them here.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
