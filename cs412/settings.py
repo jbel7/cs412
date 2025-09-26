@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'quotes', #quotes app(Assignment 1)
     'restaurant', #restaurant app(Assignment 2)
+    'mini_insta', # mini insta app (Assignment 3)
 ]
 
 MIDDLEWARE = [

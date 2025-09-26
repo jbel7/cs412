@@ -1,0 +1,58 @@
+<!-- HTML to show all profiles at once in app -->
+
+{% extends 'mini_insta/base.html' %}
+
+{% block title %}All Profiles - Mini Instagram{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4 text-center">
+            <i class="fas fa-users"></i> All Profiles
+        </h1>
+        <p class="text-center text-muted mb-4">Discover amazing people on Mini Instagram</p>
+    </div>
+</div>
+
+<div class="row">
+    {% for profile in profiles %}
+    <div class="col-lg-4 col-md-6 col-12 mb-4">
+        <div class="profile-card p-4 h-100">
+            <div class="text-center">
+                <img src="{{ profile.profile_image_url }}" 
+                     alt="{{ profile.display_name }}" 
+                     class="profile-image mb-3"
+                     onerror="this.src='https://via.placeholder.com/80x80/cccccc/666666?text=No+Image'">
+                
+                <h5 class="mb-1">{{ profile.display_name }}</h5>
+                <p class="text-muted small mb-2">@{{ profile.username }}</p>
+                
+                <p class="text-muted small mb-3">{{ profile.bio_text }}</p>
+                
+                <p class="text-muted small">
+                    <i class="fas fa-calendar-alt"></i> 
+                    Joined {{ profile.join_date|date:"M d, Y" }}
+                </p>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info text-center">
+            <i class="fas fa-info-circle"></i> 
+            No profiles found. Create some profiles in the Django admin!
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% if profiles %}
+<div class="row mt-4">
+    <div class="col-12 text-center">
+        <p class="text-muted">
+            Showing {{ profiles|length }} profile{{ profiles|length|pluralize }}
+        </p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
