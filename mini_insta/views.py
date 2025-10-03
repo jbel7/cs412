@@ -1,6 +1,8 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView
-from .models import Profile, Post
+from django.views.generic import ListView, DetailView, CreateView
+from .models import Profile, Post, Photo
+from django.urls import reverse
+from .forms import CreatePostForm
 
 # Create your views here.
 
@@ -21,3 +23,43 @@ class PostDetailView(DetailView):
     model = Post
     template_name = 'mini_insta/show_post.html'
     context_object_name = 'post'
+
+class CreatePostView(CreateView):
+    """View to create a new Post"""
+    form_class = CreatePostForm
+    template_name = 'mini_insta/create_post_form.html'
+    
+    def get_context_data(self, **kwargs):
+        """Add the Profile to the context data"""
+        context = super().get_context_data(**kwargs)
+        # Get the profile from the URL parameter
+        profile = Profile.objects.get(pk=self.kwargs['pk'])
+        context['profile'] = profile
+        return context
+    
+    def form_valid(self, form):
+        """Handle the form submission to create Post and Photo"""
+        # Get the profile from the URL parameter
+        profile = Profile.objects.get(pk=self.kwargs['pk'])
+        
+        # Attach the profile to the post before saving
+        form.instance.profile = profile
+        
+        # Save the post (this will call super().form_valid())
+        response = super().form_valid(form)
+        
+        # Handle multiple image URLs
+        image_urls_text = form.cleaned_data.get('image_urls', '')
+        if image_urls_text:
+            urls = [u.strip() for u in image_urls_text.splitlines() if u.strip()]
+            for url in urls:
+                Photo.objects.create(post=self.object, image_url=url)
+            print(f"✅ Created {len(urls)} photos for post {self.object.pk}")
+        else:
+            print("⚠️ No image URLs provided")
+        
+        return response
+    
+    def get_success_url(self):
+        """Redirect to the post detail page after successful creation"""
+        return reverse('show_post', kwargs={'pk': self.object.pk})

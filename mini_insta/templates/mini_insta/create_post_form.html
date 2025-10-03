@@ -1,0 +1,101 @@
+<!-- html template to create form for posts-->
+
+{% extends 'mini_insta/base.html' %}
+
+{% block title %}Create New Post - Mini Instagram{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8 col-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-plus-circle"></i> Create New Post
+                </h4>
+            </div>
+            <div class="card-body">
+                <!-- Profile Info -->
+                <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
+                    <img src="{{ profile.profile_image_url }}" 
+                         alt="{{ profile.username }}" 
+                         class="profile-image-small me-3"
+                         onerror="this.src='https://via.placeholder.com/40x40/cccccc/666666?text=No+Image'">
+                    <div>
+                        <strong>{{ profile.username }}</strong>
+                        <br>
+                        <small class="text-muted">{{ profile.display_name }}</small>
+                    </div>
+                </div>
+
+                <!-- Form -->
+                <form method="POST" action="{% url 'create_post' profile.pk %}">
+                    {% csrf_token %}
+                    
+                    <!-- Caption Field -->
+                    <div class="mb-3">
+                        <label for="{{ form.caption.id_for_label }}" class="form-label">
+                            {{ form.caption.label }}
+                        </label>
+                        {{ form.caption }}
+                        {% if form.caption.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.caption.errors }}
+                            </div>
+                        {% endif %}
+                        {% if form.caption.help_text %}
+                            <small class="form-text text-muted">{{ form.caption.help_text }}</small>
+                        {% endif %}
+                    </div>
+
+                    <!-- Image URL Field -->
+                    <div class="mb-3">
+                        <label for="{{ form.image_url.id_for_label }}" class="form-label">
+                            {{ form.image_urls.label }}
+                        </label>
+                        {{ form.image_urls }}
+                        {% if form.image_urls.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.image_urls.errors }}
+                            </div>
+                        {% endif %}
+                        {% if form.image_urls.help_text %}
+                            <small class="form-text text-muted">{{ form.image_urls.help_text }}</small>
+                        {% endif %}
+                    </div>
+
+                    <!-- Form Errors -->
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    <!-- Buttons -->
+                    <div class="d-flex gap-2 justify-content-end">
+                        <a href="{% url 'show_profile' profile.pk %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Post
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tips Card -->
+        <div class="card mt-3">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i class="fas fa-lightbulb text-warning"></i> Tips for posting
+                </h6>
+                <ul class="small mb-0">
+                    <li>Use a direct link to an image (ending in .jpg, .png, etc.)</li>
+                    <li>Try free image sites like Unsplash or Pexels</li>
+                    <li>Make your caption engaging and use emojis! </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

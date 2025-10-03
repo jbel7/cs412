@@ -106,7 +106,11 @@
                 <a class="nav-link" href="{% url 'show_all_profiles' %}">
                     <i class="fas fa-home"></i> All Profiles
                 </a>
-                <!-- Future navigation links will go here -->
+                {% if profile %}
+                <a class="nav-link" href="{% url 'create_post' profile.pk %}">
+                    <i class="fas fa-plus-square"></i> Create Post
+                </a>
+                {% endif %}
             </div>
         </div>
     </nav>
@@ -124,8 +128,13 @@
                 <a href="{% url 'show_all_profiles' %}" class="text-decoration-none">
                     <i class="fas fa-home"></i> Back to All Profiles
                 </a>
+                {% if profile %}
+                | <a href="{% url 'create_post' profile.pk %}" class="text-decoration-none">
+                    <i class="fas fa-plus-square"></i> Create Post
+                </a>
+                {% endif %}
             </p>
-            <p>&copy; Jed's Mini Instagram</p>
+            <p>&copy; Jeds Mini Instagram</p>
         </div>
     </footer>
 
