@@ -1,0 +1,77 @@
+<!---  individual post template-->
+
+{% extends 'mini_insta/base.html' %}
+
+{% block title %}Post by {{ post.profile.username }} - Mini Instagram{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-12">
+        <!-- Back button -->
+        <div class="mb-3">
+            <a href="{% url 'show_profile' post.profile.pk %}" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Back to Profile
+            </a>
+        </div>
+
+        <!-- Post Card -->
+        <div class="card shadow-sm">
+            <!-- Post Header -->
+            <div class="card-header bg-white border-bottom">
+                <div class="d-flex align-items-center">
+                    <a href="{% url 'show_profile' post.profile.pk %}">
+                        <img src="{{ post.profile.profile_image_url }}" 
+                             alt="{{ post.profile.username }}" 
+                             class="profile-image-small me-3"
+                             onerror="this.src='https://via.placeholder.com/40x40/cccccc/666666?text=No+Image'">
+                    </a>
+                    <div>
+                        <a href="{% url 'show_profile' post.profile.pk %}" class="text-decoration-none text-dark">
+                            <strong>{{ post.profile.username }}</strong>
+                        </a>
+                        <br>
+                        <small class="text-muted">
+                            <i class="fas fa-clock"></i> {{ post.timestamp|date:"F d, Y" }} at {{ post.timestamp|time:"g:i A" }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Photos -->
+            <div class="post-photos">
+                {% for photo in post.get_all_photos %}
+                <div class="post-photo-container">
+                    <img src="{{ photo.image_url }}" 
+                         class="post-detail-image" 
+                         alt="Photo {{ forloop.counter }}"
+                         onerror="this.src='https://via.placeholder.com/600x600/f0f0f0/999999?text=Image+Not+Found'">
+                </div>
+                {% empty %}
+                <div class="text-center py-5 bg-light">
+                    <i class="fas fa-image fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No photos attached to this post</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Post Body -->
+            <div class="card-body">
+                <p class="mb-2">
+                    <a href="{% url 'show_profile' post.profile.pk %}" class="text-decoration-none text-dark">
+                        <strong>{{ post.profile.username }}</strong>
+                    </a>
+                    {{ post.caption }}
+                </p>
+                <small class="text-muted">{{ post.timestamp|timesince }} ago</small>
+            </div>
+
+            <!-- Photo Count Info -->
+            {% if post.get_all_photos.count > 0 %}
+            <div class="card-footer bg-white text-muted small">
+                <i class="fas fa-images"></i> {{ post.get_all_photos.count }} photo{{ post.get_all_photos.count|pluralize }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

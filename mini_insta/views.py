@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
-from .models import Profile
+from .models import Profile, Post
 
 # Create your views here.
 
@@ -15,3 +15,9 @@ class ProfileDetailView(DetailView):
     model = Profile
     template_name = 'mini_insta/show_profile.html'
     context_object_name = 'profile'
+
+# Adds the detail view to posts on each profile
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'mini_insta/show_post.html'
+    context_object_name = 'post'
