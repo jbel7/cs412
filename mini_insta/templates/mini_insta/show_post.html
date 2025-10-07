@@ -41,7 +41,7 @@
             <div class="post-photos">
                 {% for photo in post.get_all_photos %}
                 <div class="post-photo-container">
-                    <img src="{{ photo.image_url }}" 
+                    <img src="{{ photo.get_image_url }}" 
                          class="post-detail-image" 
                          alt="Photo {{ forloop.counter }}"
                          onerror="this.src='https://via.placeholder.com/600x600/f0f0f0/999999?text=Image+Not+Found'">

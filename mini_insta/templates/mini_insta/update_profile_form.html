@@ -1,0 +1,94 @@
+<!--HTML for updating profile  -->
+
+{% extends 'mini_insta/base.html' %}
+
+{% block title %}Update Profile - Mini Instagram{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8 col-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-purple text-white" style="background-color: #a855f7;">
+                <h4 class="mb-0">
+                    <i class="fas fa-user-edit"></i> @{{ profile.username }}: Update Profile
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{% url 'update_profile' profile.pk %}">
+                    {% csrf_token %}
+                    
+                    <!-- Display Name -->
+                    <div class="mb-3">
+                        <label for="{{ form.display_name.id_for_label }}" class="form-label">
+                            Display Name
+                        </label>
+                        {{ form.display_name }}
+                        {% if form.display_name.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.display_name.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Bio Text -->
+                    <div class="mb-3">
+                        <label for="{{ form.bio_text.id_for_label }}" class="form-label">
+                            Bio Text
+                        </label>
+                        {{ form.bio_text }}
+                        {% if form.bio_text.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.bio_text.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Profile Image URL -->
+                    <div class="mb-3">
+                        <label for="{{ form.profile_image_url.id_for_label }}" class="form-label">
+                            Profile Image URL
+                        </label>
+                        {{ form.profile_image_url }}
+                        {% if form.profile_image_url.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.profile_image_url.errors }}
+                            </div>
+                        {% endif %}
+                        <small class="form-text text-muted">
+                            Enter a URL to an image for your profile picture
+                        </small>
+                    </div>
+
+                    <!-- Current Profile Preview -->
+                    <div class="mb-3">
+                        <label class="form-label">Current Profile Picture:</label>
+                        <div>
+                            <img src="{{ profile.profile_image_url }}" 
+                                 alt="{{ profile.username }}" 
+                                 class="profile-image"
+                                 onerror="this.src='https://via.placeholder.com/80x80/cccccc/666666?text=No+Image'">
+                        </div>
+                    </div>
+
+                    <!-- Form Errors -->
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    <!-- Buttons -->
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary flex-fill" style="background-color: #a855f7; border-color: #a855f7;">
+                            <i class="fas fa-save"></i> Update
+                        </button>
+                        <a href="{% url 'show_profile' profile.pk %}" class="btn btn-secondary flex-fill" style="background-color: #a855f7; border-color: #a855f7;">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

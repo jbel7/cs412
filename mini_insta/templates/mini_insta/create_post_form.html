@@ -28,7 +28,7 @@
                 </div>
 
                 <!-- Form -->
-                <form method="POST" action="{% url 'create_post' profile.pk %}">
+                <form method="POST" enctype="multipart/form-data" action="{% url 'create_post' profile.pk %}">
                     {% csrf_token %}
                     
                     <!-- Caption Field -->
@@ -42,25 +42,23 @@
                                 {{ form.caption.errors }}
                             </div>
                         {% endif %}
-                        {% if form.caption.help_text %}
-                            <small class="form-text text-muted">{{ form.caption.help_text }}</small>
-                        {% endif %}
                     </div>
 
-                    <!-- Image URL Field -->
+                    <!-- File Upload Field -->
                     <div class="mb-3">
-                        <label for="{{ form.image_url.id_for_label }}" class="form-label">
-                            {{ form.image_urls.label }}
+                        <label for="files" class="form-label">
+                            Select Photos <span class="text-danger">*</span>
                         </label>
-                        {{ form.image_urls }}
-                        {% if form.image_urls.errors %}
-                            <div class="text-danger small mt-1">
-                                {{ form.image_urls.errors }}
-                            </div>
-                        {% endif %}
-                        {% if form.image_urls.help_text %}
-                            <small class="form-text text-muted">{{ form.image_urls.help_text }}</small>
-                        {% endif %}
+                        <input type="file" 
+                               class="form-control" 
+                               name="files" 
+                               id="files" 
+                               accept="image/*" 
+                               multiple 
+                               required>
+                        <small class="form-text text-muted">
+                            You can select multiple images at once (Ctrl/Cmd + Click)
+                        </small>
                     </div>
 
                     <!-- Form Errors -->
@@ -90,9 +88,9 @@
                     <i class="fas fa-lightbulb text-warning"></i> Tips for posting
                 </h6>
                 <ul class="small mb-0">
-                    <li>Use a direct link to an image (ending in .jpg, .png, etc.)</li>
-                    <li>Try free image sites like Unsplash or Pexels</li>
-                    <li>Make your caption engaging and use emojis! </li>
+                    <li>Select multiple photos by holding Ctrl (Windows) or Cmd (Mac)</li>
+                    <li>Supported formats: JPG, PNG, GIF, WebP</li>
+                    <li>Make your caption engaging and use emojis!</li>
                 </ul>
             </div>
         </div>

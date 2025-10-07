@@ -35,11 +35,16 @@ class PostAdmin(admin.ModelAdmin):
 
 @admin.register(Photo)
 class PhotoAdmin(admin.ModelAdmin):
-    list_display = ['post', 'image_url_preview', 'timestamp']
+    list_display = ['post', 'has_file', 'has_url', 'timestamp']
     list_filter = ['timestamp']
-    search_fields = ['post__caption', 'post__profile__username']
     ordering = ['-timestamp']
     
-    def image_url_preview(self, obj):
-        return obj.image_url[:60] + '...' if len(obj.image_url) > 60 else obj.image_url
-    image_url_preview.short_description = 'Image URL'
+    def has_file(self, obj):
+        return bool(obj.image_file)
+    has_file.boolean = True
+    has_file.short_description = 'Has File'
+    
+    def has_url(self, obj):
+        return bool(obj.image_url)
+    has_url.boolean = True
+    has_url.short_description = 'Has URL'
