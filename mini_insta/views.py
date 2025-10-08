@@ -1,8 +1,8 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Profile, Post, Photo
 from django.urls import reverse
-from .forms import CreatePostForm, UpdateProfileForm
+from .forms import CreatePostForm, UpdateProfileForm, UpdatePostForm
 
 # Create your views here.
 
@@ -68,3 +68,37 @@ class UpdateProfileView(UpdateView):
     model = Profile
     form_class = UpdateProfileForm
     template_name = 'mini_insta/update_profile_form.html'
+
+class DeletePostView(DeleteView):
+    """View to delete a Post"""
+    model = Post
+    template_name = 'mini_insta/delete_post_form.html'
+    context_object_name = 'post'
+    
+    def get_context_data(self, **kwargs):
+        """Add the Profile to the context data"""
+        context = super().get_context_data(**kwargs)
+        context['profile'] = self.object.profile
+        return context
+    
+    def get_success_url(self):
+        """Redirect to the profile page after successful deletion"""
+        return reverse('show_profile', kwargs={'pk': self.object.profile.pk})
+
+
+class UpdatePostView(UpdateView):
+    """View to update a Post"""
+    model = Post
+    form_class = UpdatePostForm
+    template_name = 'mini_insta/update_post_form.html'
+    context_object_name = 'post'
+    
+    def get_context_data(self, **kwargs):
+        """Add the Profile to the context data"""
+        context = super().get_context_data(**kwargs)
+        context['profile'] = self.object.profile
+        return context
+    
+    def get_success_url(self):
+        """Redirect to the post detail page after successful update"""
+        return reverse('show_post', kwargs={'pk': self.object.pk})

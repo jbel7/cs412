@@ -1,0 +1,69 @@
+<!-- Form for update post page-->
+
+{% extends 'mini_insta/base.html' %}
+
+{% block title %}@{{ profile.username }}: Update Post - Mini Instagram{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8 col-12">
+        <div class="card shadow-sm">
+            <div class="card-header text-white" style="background-color: #a855f7;">
+                <h4 class="mb-0">
+                    <i class="fas fa-edit"></i> @{{ profile.username }}: Update Post
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <!-- Caption Field -->
+                    <div class="mb-3">
+                        <label for="{{ form.caption.id_for_label }}" class="form-label">
+                            Caption
+                        </label>
+                        {{ form.caption }}
+                        {% if form.caption.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.caption.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Form Errors -->
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    <!-- Buttons -->
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary flex-fill" style="background-color: #a855f7; border-color: #a855f7;">
+                            <i class="fas fa-save"></i> Update
+                        </button>
+                        <a href="{% url 'show_post' post.pk %}" class="btn btn-secondary flex-fill" style="background-color: #a855f7; border-color: #a855f7;">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+
+                <!-- Post Info -->
+                <div class="mt-4 pt-3 border-top">
+                    <div class="d-flex align-items-center">
+                        <img src="{{ profile.profile_image_url }}" 
+                             alt="{{ profile.username }}" 
+                             class="profile-image-small me-3"
+                             onerror="this.src='https://via.placeholder.com/40x40/cccccc/666666?text=No+Image'">
+                        <div>
+                            <strong>@{{ profile.username }}</strong>
+                            <br>
+                            <small class="text-muted">{{ post.timestamp|date:"F d, Y" }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

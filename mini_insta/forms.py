@@ -45,3 +45,20 @@ class UpdateProfileForm(forms.ModelForm):
             'bio_text': 'Bio Text',
             'profile_image_url': 'Profile Image URL',
         }
+
+class UpdatePostForm(forms.ModelForm):
+    """Form to update an existing Post"""
+    
+    class Meta:
+        model = Post
+        fields = ['caption']
+        widgets = {
+            'caption': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 6,
+                'placeholder': 'Update your caption...'
+            }),
+        }
+        labels = {
+            'caption': 'Caption',
+        }
