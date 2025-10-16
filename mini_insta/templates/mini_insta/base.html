@@ -12,6 +12,7 @@
         body {
             background-color: #fafafa;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-bottom: 80px; /* Space for bottom navigation */
         }
         .navbar-brand {
             font-weight: bold;
@@ -93,20 +94,45 @@
             background-color: #f8f9fa;
             border-top: 1px solid #e9ecef;
         }
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            border-top: 1px solid #dbdbdb;
+            padding: 10px 0;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        .bottom-nav-icon {
+            font-size: 24px;
+            color: #262626;
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+        .bottom-nav-icon:hover {
+            transform: scale(1.1);
+            color: #262626;
+        }
+        .bottom-nav-icon.active {
+            color: #0095f6;
+        }
     </style>
 </head>
 <body>
-    <!-- Navigation Header -->
+    <!-- Top Navigation Header -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
         <div class="container">
             <a class="navbar-brand" href="{% url 'show_all_profiles' %}">
                 <i class="fab fa-instagram"></i> Mini Instagram
             </a>
             <div class="navbar-nav">
-                <a class="nav-link" href="{% url 'show_all_profiles' %}">
-                    <i class="fas fa-home"></i> All Profiles
-                </a>
                 {% if profile %}
+                <a class="nav-link" href="{% url 'show_feed' profile.pk %}">
+                    <i class="fas fa-home"></i> Feed
+                </a>
                 <a class="nav-link" href="{% url 'create_post' profile.pk %}">
                     <i class="fas fa-plus-square"></i> Create Post
                 </a>
@@ -121,22 +147,38 @@
         {% endblock %}
     </div>
 
-    <!-- Footer -->
-    <footer class="text-center text-muted">
+    <!-- Bottom Navigation (Mobile-friendly) -->
+    {% if profile %}
+    <div class="bottom-nav">
         <div class="container">
-            <p>
-                <a href="{% url 'show_all_profiles' %}" class="text-decoration-none">
-                    <i class="fas fa-home"></i> Back to All Profiles
-                </a>
-                {% if profile %}
-                | <a href="{% url 'create_post' profile.pk %}" class="text-decoration-none">
-                    <i class="fas fa-plus-square"></i> Create Post
-                </a>
-                {% endif %}
-            </p>
-            <p>&copy; Jeds Mini Instagram</p>
+            <div class="row text-center">
+                <div class="col-3">
+                    <a href="{% url 'show_feed' profile.pk %}" class="bottom-nav-icon">
+                        <i class="fas fa-home"></i>
+                    </a>
+                </div>
+                <div class="col-3">
+                    <a href="{% url 'show_all_profiles' %}" class="bottom-nav-icon">
+                        <i class="fas fa-search"></i>
+                    </a>
+                </div>
+                <div class="col-3">
+                    <a href="{% url 'create_post' profile.pk %}" class="bottom-nav-icon">
+                        <i class="fas fa-plus-square"></i>
+                    </a>
+                </div>
+                <div class="col-3">
+                    <a href="{% url 'show_profile' profile.pk %}" class="bottom-nav-icon">
+                        <img src="{{ profile.profile_image_url }}" 
+                             alt="{{ profile.username }}" 
+                             style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover;"
+                             onerror="this.src='https://via.placeholder.com/24x24/cccccc/666666?text=?'">
+                    </a>
+                </div>
+            </div>
         </div>
-    </footer>
+    </div>
+    {% endif %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

@@ -115,3 +115,15 @@ class ShowFollowingDetailView(DetailView):
     model = Profile
     template_name = 'mini_insta/show_following.html'
     context_object_name = 'profile'
+
+class PostFeedListView(DetailView):
+    """View to show the post feed for a profile"""
+    model = Profile
+    template_name = 'mini_insta/show_feed.html'
+    context_object_name = 'profile'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        """Get the post feed for this profile"""
+        context['posts'] = self.object.get_post_feed()
+        return context

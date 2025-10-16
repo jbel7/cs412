@@ -1,0 +1,130 @@
+<!-- Template to show feed for specified profile-->
+
+{% extends 'mini_insta/base.html' %}
+
+{% block title %}Feed - Mini Instagram{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8 col-12">
+        <!-- Header -->
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h2 class="mb-0"><i class="fas fa-home"></i> Feed</h2>
+            <div>
+                <span class="text-muted">@{{ profile.username }}</span>
+            </div>
+        </div>
+
+        <!-- Posts Feed -->
+        {% if posts %}
+            {% for post in posts %}
+            <div class="card shadow-sm mb-4">
+                <!-- Post Header -->
+                <div class="card-header bg-white border-bottom">
+                    <div class="d-flex align-items-center">
+                        <a href="{% url 'show_profile' post.profile.pk %}">
+                            <img src="{{ post.profile.profile_image_url }}" 
+                                 alt="{{ post.profile.username }}" 
+                                 class="profile-image-small me-3"
+                                 onerror="this.src='https://via.placeholder.com/40x40/cccccc/666666?text=No+Image'">
+                        </a>
+                        <div>
+                            <a href="{% url 'show_profile' post.profile.pk %}" class="text-decoration-none text-dark">
+                                <strong>@{{ post.profile.username }}</strong>
+                            </a>
+                            <br>
+                            <small class="text-muted">
+                                {{ post.timestamp|date:"F d, Y" }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Post Photo -->
+                <a href="{% url 'show_post' post.pk %}" class="text-decoration-none">
+                    {% with first_photo=post.get_all_photos.first %}
+                        {% if first_photo %}
+                            <img src="{{ first_photo.get_image_url }}" 
+                                 class="card-img-top" 
+                                 alt="Post by {{ post.profile.username }}"
+                                 style="max-height: 500px; object-fit: cover;"
+                                 onerror="this.src='https://via.placeholder.com/600x400/f0f0f0/999999?text=Image+Not+Found'">
+                        {% else %}
+                            <div class="text-center py-5 bg-light">
+                                <i class="fas fa-image fa-3x text-muted"></i>
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                </a>
+
+                <!-- Post Body -->
+                <div class="card-body">
+                    <!-- Likes -->
+                    {% if post.get_likes.count > 0 %}
+                    <p class="mb-2">
+                        <strong>
+                            Liked by 
+                            {% with first_like=post.get_likes.first %}
+                                <a href="{% url 'show_profile' first_like.profile.pk %}" class="text-dark text-decoration-none">
+                                    @{{ first_like.profile.username }}
+                                </a>
+                                {% if post.get_likes.count > 1 %}
+                                    and <strong>{{ post.get_likes.count|add:"-1" }} other{{ post.get_likes.count|add:"-1"|pluralize }}</strong>
+                                {% endif %}
+                            {% endwith %}
+                        </strong>
+                    </p>
+                    {% endif %}
+
+                    <!-- Caption -->
+                    <p class="mb-2">
+                        <a href="{% url 'show_profile' post.profile.pk %}" class="text-decoration-none text-dark">
+                            <strong>@{{ post.profile.username }}</strong>
+                        </a>
+                        {{ post.caption|truncatewords:30 }}
+                        {% if post.caption|wordcount > 30 %}
+                            <a href="{% url 'show_post' post.pk %}" class="text-muted">more</a>
+                        {% endif %}
+                    </p>
+
+                    <!-- Comments Preview -->
+                    {% if post.get_all_comments %}
+                    <div class="mb-2">
+                        {% if post.get_all_comments.count > 2 %}
+                        <a href="{% url 'show_post' post.pk %}" class="text-muted small text-decoration-none">
+                            View all {{ post.get_all_comments.count }} comments
+                        </a>
+                        {% endif %}
+                        
+                        {% for comment in post.get_all_comments|slice:":2" %}
+                        <p class="mb-1 small">
+                            <a href="{% url 'show_profile' comment.profile.pk %}" class="text-decoration-none text-dark">
+                                <strong>@{{ comment.profile.username }}</strong>
+                            </a>
+                            {{ comment.text|truncatewords:15 }}
+                        </p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <!-- Timestamp -->
+                    <small class="text-muted">{{ post.timestamp|timesince }} ago</small>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <!-- Empty Feed State -->
+        <div class="card shadow-sm">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">No posts in your feed</h5>
+                <p class="text-muted">Follow some profiles to see their posts here!</p>
+                <a href="{% url 'show_all_profiles' %}" class="btn btn-primary mt-3">
+                    Discover Profiles
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

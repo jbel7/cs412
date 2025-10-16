@@ -43,6 +43,15 @@ class Profile(models.Model):
     def get_num_following(self):
         """Return the count of profiles being followed"""
         return Follow.objects.filter(follower_profile=self).count()
+
+    def get_post_feed(self):
+        """Return all Posts from profiles that this profile follows, ordered by timestamp"""
+        following = self.get_following()
+        
+        """Get all posts from those profiles, ordered by most recent first"""
+        posts = Post.objects.filter(profile__in=following).order_by('-timestamp')
+        
+        return posts
     
     class Meta:
         ordering = ['username']
