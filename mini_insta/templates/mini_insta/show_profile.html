@@ -33,10 +33,14 @@
                                 <strong>{{ profile.get_all_posts.count }}</strong> post{{ profile.get_all_posts.count|pluralize }}
                             </div>
                             <div class="me-4">
-                                <strong>0</strong> followers
+                                <a href="{% url 'show_followers' profile.pk %}" class="text-decoration-none text-dark"></a>
+                                    <strong>{{ profile.get_num_followers }}</strong> follower{{ profile.get_num_followers|pluralize }}
+                                </a>
                             </div>
                             <div class="me-4">
-                                <strong>0</strong> following
+                                <a href="{% url 'show_following' profile.pk %}" class="text-decoration-none text-dark"></a>
+                                    <strong>{{ profile.get_num_following }}</strong> following
+                                </a>
                             </div>
                         </div>
                         

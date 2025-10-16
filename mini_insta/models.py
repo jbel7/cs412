@@ -21,6 +21,28 @@ class Profile(models.Model):
     def get_absolute_url(self):
         """Return the URL to display this Profile"""
         return reverse('show_profile', kwargs={'pk': self.pk})
+
+    def get_followers(self):
+        """Return a list of Profiles who follow this profile"""
+        # Get all Follow objects where this profile is being followed
+        follows = Follow.objects.filter(profile=self)
+        # Return list of the follower profiles
+        return [follow.follower_profile for follow in follows]
+    
+    def get_num_followers(self):
+        """Return the count of followers"""
+        return Follow.objects.filter(profile=self).count()
+    
+    def get_following(self):
+        """Return a list of Profiles that this profile follows"""
+        # Get all Follow objects where this profile is the follower
+        follows = Follow.objects.filter(follower_profile=self)
+        # Return list of the profiles being followed
+        return [follow.profile for follow in follows]
+    
+    def get_num_following(self):
+        """Return the count of profiles being followed"""
+        return Follow.objects.filter(follower_profile=self).count()
     
     class Meta:
         ordering = ['username']
@@ -40,6 +62,14 @@ class Post(models.Model):
     def get_absolute_url(self):
         """Return the URL to display this Post"""
         return reverse('show_post', kwargs={'pk': self.pk})
+
+    def get_all_comments(self):
+        """Return all Comments for this Post, ordered by timestamp"""
+        return Comment.objects.filter(post=self).order_by('-timestamp')
+    
+    def get_likes(self):
+        """Return all Likes for this Post"""
+        return Like.objects.filter(post=self)
     
     
     class Meta:
@@ -67,3 +97,51 @@ class Photo(models.Model):
 
     class Meta:
         ordering = ['timestamp']
+
+
+class Follow(models.Model):
+    """Represents a follow relationship between two profiles"""
+    profile = models.ForeignKey(
+        Profile, 
+        on_delete=models.CASCADE, 
+        related_name='followers'  # The profile being followed
+    )
+    follower_profile = models.ForeignKey(
+        Profile, 
+        on_delete=models.CASCADE, 
+        related_name='following'  # The profile doing the following
+    )
+    timestamp = models.DateTimeField(default=timezone.now)
+    
+    def __str__(self):
+        return f"{self.follower_profile.display_name} follows {self.profile.display_name}"
+    
+    class Meta:
+        unique_together = ('profile', 'follower_profile')  # Prevent duplicate follows
+
+
+class Comment(models.Model):
+    """Represents a comment on a post"""
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='comments')
+    text = models.TextField(max_length=500)
+    timestamp = models.DateTimeField(default=timezone.now)
+    
+    def __str__(self):
+        return f"Comment by {self.profile.username} on post {self.post.pk}"
+    
+    class Meta:
+        ordering = ['-timestamp']
+
+
+class Like(models.Model):
+    """Represents a like on a post"""
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='likes')
+    timestamp = models.DateTimeField(default=timezone.now)
+    
+    def __str__(self):
+        return f"{self.profile.username} likes post {self.post.pk}"
+    
+    class Meta:
+        unique_together = ('post', 'profile')  # One like per user per post
