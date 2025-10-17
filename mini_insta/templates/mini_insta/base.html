@@ -88,6 +88,15 @@
             justify-content: center;
             align-items: center;
         }
+        .profile-result-card {
+            border: 1px solid #dbdbdb;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .profile-result-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
         footer {
             margin-top: 50px;
             padding: 20px 0;
@@ -158,7 +167,7 @@
                     </a>
                 </div>
                 <div class="col-3">
-                    <a href="{% url 'show_all_profiles' %}" class="bottom-nav-icon">
+                    <a href="{% url 'search' profile.pk %}" class="bottom-nav-icon">
                         <i class="fas fa-search"></i>
                     </a>
                 </div>
@@ -170,9 +179,9 @@
                 <div class="col-3">
                     <a href="{% url 'show_profile' profile.pk %}" class="bottom-nav-icon">
                         <img src="{{ profile.profile_image_url }}" 
-                             alt="{{ profile.username }}" 
-                             style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover;"
-                             onerror="this.src='https://via.placeholder.com/24x24/cccccc/666666?text=?'">
+                            alt="{{ profile.username }}" 
+                            style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover;"
+                            onerror="this.src='https://via.placeholder.com/24x24/cccccc/666666?text=?'">
                     </a>
                 </div>
             </div>

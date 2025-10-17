@@ -1,0 +1,64 @@
+<!-- Template for search page-->
+
+{% extends 'mini_insta/base.html' %}
+
+{% block title %}Search - Mini Instagram{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8 col-12">
+        <!-- Back button -->
+        <div class="mb-3">
+            <a href="{% url 'show_profile' profile.pk %}" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Back to Profile
+            </a>
+        </div>
+
+        <!-- Header -->
+        <div class="mb-4">
+            <h2><i class="fas fa-arrow-left"></i> Search</h2>
+            <p class="mb-1"><strong>@{{ profile.username }}</strong></p>
+        </div>
+
+        <!-- Search Form -->
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <form method="GET" action="{% url 'search' profile.pk %}">
+                    <div class="mb-3">
+                        <label for="query" class="form-label mb-3">
+                            <strong>Search for text, tags, or people:</strong>
+                        </label>
+                        <textarea 
+                            class="form-control" 
+                            id="query" 
+                            name="query" 
+                            rows="3"
+                            placeholder="Enter your search..."
+                            required
+                            autofocus></textarea>
+                    </div>
+
+                    <!-- Search Button -->
+                    <button type="submit" class="btn btn-lg w-100 text-white" style="background-color: #a855f7; border-color: #a855f7;">
+                        Search
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tips -->
+        <div class="card mt-3">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i class="fas fa-lightbulb text-warning"></i> Search Tips
+                </h6>
+                <ul class="small mb-0">
+                    <li>Search by username, display name, or bio</li>
+                    <li>Search for keywords in post captions</li>
+                    <li>Search is case-insensitive</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

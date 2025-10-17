@@ -1,0 +1,138 @@
+<!-- Template to show results page for specific search-->
+
+{% extends 'mini_insta/base.html' %}
+
+{% block title %}Search Results - Mini Instagram{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-12">
+        <!-- Header -->
+        <div class="mb-4">
+            <h2><i class="fas fa-arrow-left"></i> Search Results</h2>
+            <p class="mb-1"><strong>@{{ profile.username }}</strong></p>
+        </div>
+
+        <!-- Profiles Section -->
+        <div class="mb-5">
+            <h4 class="mb-3">Profiles matching the query for `{{ query }}`</h4>
+            
+            {% if profiles %}
+            <div class="row">
+                {% for found_profile in profiles %}
+                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                    <a href="{% url 'show_profile' found_profile.pk %}" class="text-decoration-none">
+                        <div class="card profile-result-card h-100">
+                            <div class="card-body text-center p-3">
+                                <img src="{{ found_profile.profile_image_url }}" 
+                                     alt="{{ found_profile.username }}" 
+                                     class="profile-image mb-2"
+                                     onerror="this.src='https://via.placeholder.com/80x80/cccccc/666666?text=No+Image'">
+                                <h6 class="mb-1">{{ found_profile.display_name }}</h6>
+                                <p class="text-muted small mb-0">@{{ found_profile.username }}</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> No profiles found matching "{{ query }}"
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Posts Section -->
+        <div class="mb-5">
+            <h4 class="mb-3">Posts matching the query for `{{ query }}`</h4>
+            
+            {% if posts %}
+            {% for post in posts %}
+            <div class="card shadow-sm mb-4">
+                <!-- Post Header -->
+                <div class="card-header bg-white border-bottom">
+                    <div class="d-flex align-items-center">
+                        <a href="{% url 'show_profile' post.profile.pk %}">
+                            <img src="{{ post.profile.profile_image_url }}" 
+                                 alt="{{ post.profile.username }}" 
+                                 class="profile-image-small me-3"
+                                 onerror="this.src='https://via.placeholder.com/40x40/cccccc/666666?text=No+Image'">
+                        </a>
+                        <div>
+                            <a href="{% url 'show_profile' post.profile.pk %}" class="text-decoration-none text-dark">
+                                <strong>@{{ post.profile.username }}</strong>
+                            </a>
+                            <br>
+                            <small class="text-muted">
+                                {{ post.timestamp|date:"F d, Y" }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Post Photo -->
+                <a href="{% url 'show_post' post.pk %}" class="text-decoration-none">
+                    {% with first_photo=post.get_all_photos.first %}
+                        {% if first_photo %}
+                            <img src="{{ first_photo.get_image_url }}" 
+                                 class="card-img-top" 
+                                 alt="Post by {{ post.profile.username }}"
+                                 style="max-height: 500px; object-fit: cover;"
+                                 onerror="this.src='https://via.placeholder.com/600x400/f0f0f0/999999?text=Image+Not+Found'">
+                        {% else %}
+                            <div class="text-center py-5 bg-light">
+                                <i class="fas fa-image fa-3x text-muted"></i>
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                </a>
+
+                <!-- Post Body -->
+                <div class="card-body">
+                    <!-- Likes -->
+                    {% if post.get_likes.count > 0 %}
+                    <p class="mb-2">
+                        <strong>
+                            Liked by 
+                            {% with first_like=post.get_likes.first %}
+                                <a href="{% url 'show_profile' first_like.profile.pk %}" class="text-dark text-decoration-none">
+                                    @{{ first_like.profile.username }}
+                                </a>
+                                {% if post.get_likes.count > 1 %}
+                                    and <strong>{{ post.get_likes.count|add:"-1" }} other{{ post.get_likes.count|add:"-1"|pluralize }}</strong>
+                                {% endif %}
+                            {% endwith %}
+                        </strong>
+                    </p>
+                    {% endif %}
+
+                    <!-- Caption -->
+                    <p class="mb-2">
+                        <a href="{% url 'show_profile' post.profile.pk %}" class="text-decoration-none text-dark">
+                            <strong>@{{ post.profile.username }}</strong>
+                        </a>
+                        {{ post.caption }}
+                    </p>
+
+                    <!-- Timestamp -->
+                    <small class="text-muted">{{ post.timestamp|timesince }} ago</small>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> No posts found matching "{{ query }}"
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- New Search Button -->
+        <div class="text-center mb-4">
+            <a href="{% url 'search' profile.pk %}" class="btn btn-outline-primary">
+                <i class="fas fa-search"></i> New Search
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
