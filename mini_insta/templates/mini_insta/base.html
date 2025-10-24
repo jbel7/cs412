@@ -138,13 +138,25 @@
                 <i class="fab fa-instagram"></i> Mini Instagram
             </a>
             <div class="navbar-nav">
-                {% if profile %}
-                <a class="nav-link" href="{% url 'show_feed' %}">
-                    <i class="fas fa-home"></i> Feed
-                </a>
-                <a class="nav-link" href="{% url 'create_post' %}">
-                    <i class="fas fa-plus-square"></i> Create Post
-                </a>
+                {% if user.is_authenticated %}
+                    {% if profile %}
+                    <a class="nav-link" href="{% url 'show_feed' %}">
+                        <i class="fas fa-home"></i> Feed
+                    </a>
+                    <a class="nav-link" href="{% url 'create_post' %}">
+                        <i class="fas fa-plus-square"></i> Create Post
+                    </a>
+                    <a class="nav-link" href="{% url 'show_profile' profile.pk %}">
+                        <i class="fas fa-user"></i> My Profile
+                    </a>
+                    {% endif %}
+                    <a class="nav-link" href="{% url 'logout' %}">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                {% else %}
+                    <a class="nav-link" href="{% url 'login' %}">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
                 {% endif %}
             </div>
         </div>

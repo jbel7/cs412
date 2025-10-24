@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from .models import Profile, Post, Photo
 from django.urls import reverse
 from django.db.models import Q
@@ -210,3 +210,8 @@ class SearchView(ProfileLoginRequiredMixin, ListView):
             context['profiles'] = Profile.objects.none()
         
         return context
+
+
+class LogoutConfirmationView(TemplateView):
+    """Show logout confirmation page"""
+    template_name = 'mini_insta/logged_out.html'
