@@ -37,19 +37,28 @@
                                 <strong>{{ profile.get_all_posts.count }}</strong> post{{ profile.get_all_posts.count|pluralize }}
                             </div>
                             <div class="me-4">
-                                <a href="{% url 'show_followers' profile.pk %}" class="text-decoration-none text-dark"></a>
+                                <a href="{% url 'show_followers' profile.pk %}" class="text-decoration-none text-dark">
                                     <strong>{{ profile.get_num_followers }}</strong> follower{{ profile.get_num_followers|pluralize }}
                                 </a>
                             </div>
                             <div class="me-4">
-                                <a href="{% url 'show_following' profile.pk %}" class="text-decoration-none text-dark"></a>
+                                <a href="{% url 'show_following' profile.pk %}" class="text-decoration-none text-dark">
                                     <strong>{{ profile.get_num_following }}</strong> following
                                 </a>
                             </div>
                         </div>
                         
-                        <div>
+                        <!-- Display Name -->
+                        <div class="mb-2">
                             <h5 class="mb-1">{{ profile.display_name }}</h5>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bio Section - Below the profile info -->
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="mb-2">
                             <p class="mb-2">{{ profile.bio_text }}</p>
                             <p class="text-muted small mb-0">
                                 <i class="fas fa-calendar-alt"></i> 

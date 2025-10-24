@@ -3,8 +3,10 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from .models import Profile, Post, Photo
 from django.urls import reverse
 from django.db.models import Q
-from .forms import CreatePostForm, UpdateProfileForm, UpdatePostForm
+from .forms import CreatePostForm, UpdateProfileForm, UpdatePostForm, CreateProfileForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
 
 # Create your views here.
 
@@ -215,3 +217,39 @@ class SearchView(ProfileLoginRequiredMixin, ListView):
 class LogoutConfirmationView(TemplateView):
     """Show logout confirmation page"""
     template_name = 'mini_insta/logged_out.html'
+
+
+class CreateProfileView(CreateView):
+    """Create a new Profile and User account - NO LOGIN REQUIRED"""
+    model = Profile
+    form_class = CreateProfileForm
+    template_name = 'mini_insta/create_profile_form.html'
+    
+    def get_context_data(self, **kwargs):
+        """Add UserCreationForm to context"""
+        context = super().get_context_data(**kwargs)
+        context['user_form'] = UserCreationForm()
+        return context
+    
+    def form_valid(self, form):
+        """Handle both User and Profile creation"""
+        # Create User from UserCreationForm
+        user_form = UserCreationForm(self.request.POST)
+        if not user_form.is_valid():
+            # If user form is invalid, re-render with errors
+            return self.render_to_response(self.get_context_data(form=form, user_form=user_form))
+        
+        # Save the User
+        user = user_form.save()
+        
+        # Log the user in
+        login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
+        
+        # Attach the User to the Profile
+        form.instance.user = user
+        
+        # Save the Profile
+        response = super().form_valid(form)
+        
+        # Redirect to the user's profile page
+        return redirect('show_profile', pk=self.object.pk)

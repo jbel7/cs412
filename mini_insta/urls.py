@@ -10,6 +10,7 @@ urlpatterns = [
     path('post/<int:pk>', views.PostDetailView.as_view(), name='show_post'),
     path('profile/<int:pk>/followers', views.ShowFollowersDetailView.as_view(), name='show_followers'),
     path('profile/<int:pk>/following', views.ShowFollowingDetailView.as_view(), name='show_following'),
+    path('create_profile', views.CreateProfileView.as_view(), name='create_profile'),
 
     # Protected URLs (login required)
     path('profile/create_post', views.CreatePostView.as_view(), name='create_post'),
