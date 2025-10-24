@@ -1,0 +1,57 @@
+<!-- Template for login page for user-->
+
+{% extends 'mini_insta/base.html' %}
+
+{% block title %}Login - Mini Instagram{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-4 col-md-6 col-12">
+        <div class="text-center mb-4">
+            <h1><i class="fab fa-instagram"></i></h1>
+            <h2>Mini Instagram</h2>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    {% if form.errors %}
+                    <div class="alert alert-danger">
+                        Invalid username or password. Please try again.
+                    </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <input type="text" 
+                               name="username" 
+                               class="form-control" 
+                               placeholder="Username"
+                               required 
+                               autofocus>
+                    </div>
+
+                    <div class="mb-3">
+                        <input type="password" 
+                               name="password" 
+                               class="form-control" 
+                               placeholder="Password"
+                               required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100" style="background-color: #a855f7; border-color: #a855f7;">
+                        Log In
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mt-3 shadow-sm">
+            <div class="card-body text-center p-3">
+                Don't have an account? <a href="#">Sign up</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

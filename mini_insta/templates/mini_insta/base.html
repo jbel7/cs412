@@ -139,10 +139,10 @@
             </a>
             <div class="navbar-nav">
                 {% if profile %}
-                <a class="nav-link" href="{% url 'show_feed' profile.pk %}">
+                <a class="nav-link" href="{% url 'show_feed' %}">
                     <i class="fas fa-home"></i> Feed
                 </a>
-                <a class="nav-link" href="{% url 'create_post' profile.pk %}">
+                <a class="nav-link" href="{% url 'create_post' %}">
                     <i class="fas fa-plus-square"></i> Create Post
                 </a>
                 {% endif %}
@@ -156,33 +156,35 @@
         {% endblock %}
     </div>
 
-    <!-- Bottom Navigation (Mobile-friendly) -->
-    {% if profile %}
+    <!-- Bottom Navigation (Mobile-friendly) - Only for authenticated users -->
+    {% if user.is_authenticated %}
     <div class="bottom-nav">
         <div class="container">
             <div class="row text-center">
                 <div class="col-3">
-                    <a href="{% url 'show_feed' profile.pk %}" class="bottom-nav-icon">
+                    <a href="{% url 'show_feed' %}" class="bottom-nav-icon">
                         <i class="fas fa-home"></i>
                     </a>
                 </div>
                 <div class="col-3">
-                    <a href="{% url 'search' profile.pk %}" class="bottom-nav-icon">
+                    <a href="{% url 'search' %}" class="bottom-nav-icon">
                         <i class="fas fa-search"></i>
                     </a>
                 </div>
                 <div class="col-3">
-                    <a href="{% url 'create_post' profile.pk %}" class="bottom-nav-icon">
+                    <a href="{% url 'create_post' %}" class="bottom-nav-icon">
                         <i class="fas fa-plus-square"></i>
                     </a>
                 </div>
                 <div class="col-3">
+                    {% if profile %}
                     <a href="{% url 'show_profile' profile.pk %}" class="bottom-nav-icon">
                         <img src="{{ profile.profile_image_url }}" 
-                            alt="{{ profile.username }}" 
-                            style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover;"
-                            onerror="this.src='https://via.placeholder.com/24x24/cccccc/666666?text=?'">
+                             alt="{{ profile.username }}" 
+                             style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover;"
+                             onerror="this.src='https://via.placeholder.com/24x24/cccccc/666666?text=?'">
                     </a>
+                    {% endif %}
                 </div>
             </div>
         </div>

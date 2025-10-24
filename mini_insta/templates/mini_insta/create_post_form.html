@@ -28,7 +28,7 @@
                 </div>
 
                 <!-- Form -->
-                <form method="POST" enctype="multipart/form-data" action="{% url 'create_post' profile.pk %}">
+                <form method="POST" enctype="multipart/form-data" action="{% url 'create_post' %}">
                     {% csrf_token %}
                     
                     <!-- Caption Field -->

@@ -8,22 +8,26 @@
 <div class="row justify-content-center">
     <div class="col-lg-6 col-md-8 col-12">
         <!-- Back button -->
+        {% if profile %}
         <div class="mb-3">
             <a href="{% url 'show_profile' profile.pk %}" class="btn btn-outline-secondary btn-sm">
                 <i class="fas fa-arrow-left"></i> Back to Profile
             </a>
         </div>
+        {% endif %}
 
         <!-- Header -->
         <div class="mb-4">
-            <h2><i class="fas fa-arrow-left"></i> Search</h2>
+            <h2><i class="fas fa-search"></i> Search</h2>
+            {% if profile %}
             <p class="mb-1"><strong>@{{ profile.username }}</strong></p>
+            {% endif %}
         </div>
 
         <!-- Search Form -->
         <div class="card shadow-sm">
             <div class="card-body p-4">
-                <form method="GET" action="{% url 'search' profile.pk %}">
+                <form method="GET" action="{% url 'search' %}">
                     <div class="mb-3">
                         <label for="query" class="form-label mb-3">
                             <strong>Search for text, tags, or people:</strong>

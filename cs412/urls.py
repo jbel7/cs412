@@ -18,12 +18,15 @@ from django.contrib import admin
 from django.urls import path, include 
 from django.conf.urls.static import static
 from django.conf import settings 
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('quotes/', include('quotes.urls')),
     path('restaurant/', include('restaurant.urls')),
-    path('mini_insta/', include('mini_insta.urls'))
+    path('mini_insta/', include('mini_insta.urls')),
+    path('login/', auth_views.LoginView.as_view(template_name='mini_insta/login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='show_all_profiles'), name='logout'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 # Serves media files during development

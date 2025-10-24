@@ -1,10 +1,12 @@
 from django.db import models
 from django.utils import timezone
 from django.urls import reverse
+from django.contrib.auth.models import User
 # Create your models here.
 
 # Display for profile page
 class Profile(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='profile')
     username = models.CharField(max_length=50, unique=True)
     display_name = models.CharField(max_length=100)
     profile_image_url = models.URLField(max_length=200)

@@ -136,3 +136,8 @@ if socket.gethostname() == CS_DEPLOYMENT_HOSTNAME:
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Authentication settings
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/mini_insta/'
+LOGOUT_REDIRECT_URL = '/mini_insta/'

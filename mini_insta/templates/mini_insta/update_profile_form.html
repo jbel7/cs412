@@ -14,7 +14,7 @@
                 </h4>
             </div>
             <div class="card-body">
-                <form method="POST" action="{% url 'update_profile' profile.pk %}">
+                <form method="POST" action="{% url 'update_profile' %}">
                     {% csrf_token %}
                     
                     <!-- Display Name -->
@@ -80,11 +80,17 @@
                     <!-- Buttons -->
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn btn-primary flex-fill" style="background-color: #a855f7; border-color: #a855f7;">
-                            <i class="fas fa-save"></i> Update
+                            <i class="fas fa-save"></i> {% if is_new_profile %}Create Profile{% else %}Update{% endif %}
                         </button>
+                        {% if is_new_profile %}
+                        <a href="{% url 'show_all_profiles' %}" class="btn btn-secondary flex-fill" style="background-color: #a855f7; border-color: #a855f7;">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                        {% else %}
                         <a href="{% url 'show_profile' profile.pk %}" class="btn btn-secondary flex-fill" style="background-color: #a855f7; border-color: #a855f7;">
                             <i class="fas fa-times"></i> Cancel
                         </a>
+                        {% endif %}
                     </div>
                 </form>
             </div>
