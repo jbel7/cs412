@@ -1,12 +1,13 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
-from .models import Profile, Post, Photo
+from .models import Profile, Post, Photo, Follow, Like, Comment
 from django.urls import reverse
 from django.db.models import Q
-from .forms import CreatePostForm, UpdateProfileForm, UpdatePostForm, CreateProfileForm
+from .forms import CreatePostForm, UpdateProfileForm, UpdatePostForm, CreateProfileForm, CreateCommentForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -253,3 +254,123 @@ class CreateProfileView(CreateView):
         
         # Redirect to the user's profile page
         return redirect('show_profile', pk=self.object.pk)
+
+
+class FollowProfileView(ProfileLoginRequiredMixin, TemplateView):
+    """Follow a profile - LOGIN REQUIRED"""
+    
+    def dispatch(self, request, *args, **kwargs):
+        # Get the profile to follow
+        profile_to_follow = get_object_or_404(Profile, pk=kwargs['pk'])
+        current_user_profile = self.get_profile()
+        
+        # Prevent following yourself
+        if current_user_profile == profile_to_follow:
+            return redirect('show_profile', pk=profile_to_follow.pk)
+        
+        # Create follow relationship
+        follow, created = Follow.objects.get_or_create(
+            profile=profile_to_follow,
+            follower_profile=current_user_profile
+        )
+        
+        # Redirect back to the profile page
+        return redirect('show_profile', pk=profile_to_follow.pk)
+
+
+class UnfollowProfileView(ProfileLoginRequiredMixin, TemplateView):
+    """Unfollow a profile - LOGIN REQUIRED"""
+    
+    def dispatch(self, request, *args, **kwargs):
+        # Get the profile to unfollow
+        profile_to_unfollow = get_object_or_404(Profile, pk=kwargs['pk'])
+        current_user_profile = self.get_profile()
+        
+        # Prevent unfollowing yourself
+        if current_user_profile == profile_to_unfollow:
+            return redirect('show_profile', pk=profile_to_unfollow.pk)
+        
+        # Delete follow relationship
+        Follow.objects.filter(
+            profile=profile_to_unfollow,
+            follower_profile=current_user_profile
+        ).delete()
+        
+        # Redirect back to the profile page
+        return redirect('show_profile', pk=profile_to_unfollow.pk)
+
+
+class LikePostView(ProfileLoginRequiredMixin, TemplateView):
+    """Like a post - LOGIN REQUIRED"""
+    
+    def dispatch(self, request, *args, **kwargs):
+        # Get the post to like
+        post = get_object_or_404(Post, pk=kwargs['pk'])
+        current_user_profile = self.get_profile()
+        
+        # Prevent liking your own post
+        if current_user_profile == post.profile:
+            return redirect('show_post', pk=post.pk)
+        
+        # Create like relationship
+        like, created = Like.objects.get_or_create(
+            post=post,
+            profile=current_user_profile
+        )
+        
+        # Redirect back to the post page
+        return redirect('show_post', pk=post.pk)
+
+
+class UnlikePostView(ProfileLoginRequiredMixin, TemplateView):
+    """Unlike a post - LOGIN REQUIRED"""
+    
+    def dispatch(self, request, *args, **kwargs):
+        # Get the post to unlike
+        post = get_object_or_404(Post, pk=kwargs['pk'])
+        current_user_profile = self.get_profile()
+        
+        # Prevent unliking your own post
+        if current_user_profile == post.profile:
+            return redirect('show_post', pk=post.pk)
+        
+        # Delete like relationship
+        Like.objects.filter(
+            post=post,
+            profile=current_user_profile
+        ).delete()
+        
+        # Redirect back to the post page
+        return redirect('show_post', pk=post.pk)
+
+
+class CreateCommentView(ProfileLoginRequiredMixin, CreateView):
+    """Create a new Comment on a Post - LOGIN REQUIRED"""
+    model = Comment
+    form_class = CreateCommentForm
+    template_name = 'mini_insta/create_comment_form.html'
+    
+    def get_object(self):
+        """Get the Post to comment on"""
+        return get_object_or_404(Post, pk=self.kwargs['pk'])
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['post'] = self.get_object()
+        context['profile'] = self.get_profile()
+        return context
+    
+    def form_valid(self, form):
+        # Get the post and current user's profile
+        post = self.get_object()
+        profile = self.get_profile()
+        
+        # Attach the post and profile to the comment
+        form.instance.post = post
+        form.instance.profile = profile
+        
+        # Save the comment
+        form.save()
+        
+        # Redirect back to the post page
+        return redirect('show_post', pk=post.pk)

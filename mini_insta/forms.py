@@ -96,3 +96,21 @@ class CreateProfileForm(forms.ModelForm):
             'bio_text': 'Bio Text',
             'profile_image_url': 'Profile Image URL',
         }
+
+
+class CreateCommentForm(forms.ModelForm):
+    """Form to create a new Comment"""
+    
+    class Meta:
+        model = Comment
+        fields = ['text']
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 2,
+                'placeholder': 'Write a comment...'
+            }),
+        }
+        labels = {
+            'text': 'Comment',
+        }

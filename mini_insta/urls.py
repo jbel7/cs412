@@ -22,6 +22,17 @@ urlpatterns = [
     path('post/<int:pk>/delete', views.DeletePostView.as_view(), name='delete_post'),
     path('post/<int:pk>/update', views.UpdatePostView.as_view(), name='update_post'),
     
+    # Follow operations (login required)
+    path('profile/<int:pk>/follow', views.FollowProfileView.as_view(), name='follow_profile'),
+    path('profile/<int:pk>/delete_follow', views.UnfollowProfileView.as_view(), name='unfollow_profile'),
+    
+    # Like operations (login required)
+    path('post/<int:pk>/like', views.LikePostView.as_view(), name='like_post'),
+    path('post/<int:pk>/delete_like', views.UnlikePostView.as_view(), name='unlike_post'),
+    
+    # Comment operations (login required)
+    path('post/<int:pk>/comment', views.CreateCommentView.as_view(), name='create_comment'),
+    
     # Authentication URLs
     path('login/', auth_views.LoginView.as_view(template_name='mini_insta/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='logout_confirmation'), name='logout'),

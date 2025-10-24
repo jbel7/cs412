@@ -59,6 +59,26 @@
 
                 <!-- Post Body -->
                 <div class="card-body">
+                    <!-- Action Buttons -->
+                    {% if user.is_authenticated and user.profile != post.profile %}
+                        <div class="mb-2">
+                            {% with current_user_profile=user.profile %}
+                                {% if current_user_profile in post.get_likes %}
+                                <a href="{% url 'unlike_post' post.pk %}" class="btn btn-outline-danger btn-sm me-2">
+                                    <i class="fas fa-heart-broken"></i> Unlike
+                                </a>
+                                {% else %}
+                                <a href="{% url 'like_post' post.pk %}" class="btn btn-outline-danger btn-sm me-2">
+                                    <i class="fas fa-heart"></i> Like
+                                </a>
+                                {% endif %}
+                            {% endwith %}
+                            <a href="{% url 'create_comment' post.pk %}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-comment"></i> Comment
+                            </a>
+                        </div>
+                    {% endif %}
+
                     <!-- Likes -->
                     {% if post.get_likes.count > 0 %}
                     <p class="mb-2">
