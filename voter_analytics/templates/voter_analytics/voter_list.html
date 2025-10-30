@@ -1,0 +1,266 @@
+<!-- File: voter_analytics/templates/voter_list.html -->
+<!--  Name: Jed Belsany -->
+<!-- BU email: belsanyj@bu.edu -->
+<!-- Description: Template for displaying filtered list of voters -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newton Voter Analytics</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+        }
+        .filter-form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .filter-field {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        select, input[type="checkbox"] {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .reset-link {
+            margin-left: 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .reset-link:hover {
+            text-decoration: underline;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .pagination {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .pagination a, .pagination span {
+            padding: 8px 12px;
+            margin: 0 5px;
+            border: 1px solid #ddd;
+            text-decoration: none;
+            color: #007bff;
+        }
+        .pagination .current {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .results-count {
+            margin: 15px 0;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Newton Voter Analytics</h1>
+    
+    <div class="filter-form">
+        <h2>Filter Voters</h2>
+        <form method="get">
+            <div class="filter-row">
+                <div class="filter-field">
+                    <label for="party_affiliation">Party Affiliation:</label>
+                    <select name="party_affiliation" id="party_affiliation">
+                        <option value="">All Parties</option>
+                        {% for party in party_affiliations %}
+                            <option value="{{ party }}" {% if party == current_party %}selected{% endif %}>
+                                {{ party }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="filter-field">
+                    <label for="min_birth_year">Min Birth Year:</label>
+                    <select name="min_birth_year" id="min_birth_year">
+                        <option value="">No Minimum</option>
+                        {% for year in birth_years %}
+                            <option value="{{ year }}" {% if year|stringformat:"s" == current_min_year %}selected{% endif %}>
+                                {{ year }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="filter-field">
+                    <label for="max_birth_year">Max Birth Year:</label>
+                    <select name="max_birth_year" id="max_birth_year">
+                        <option value="">No Maximum</option>
+                        {% for year in birth_years %}
+                            <option value="{{ year }}" {% if year|stringformat:"s" == current_max_year %}selected{% endif %}>
+                                {{ year }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="filter-field">
+                    <label for="voter_score">Voter Score:</label>
+                    <select name="voter_score" id="voter_score">
+                        <option value="">Any Score</option>
+                        {% for score in voter_scores %}
+                            <option value="{{ score }}" {% if score|stringformat:"s" == current_voter_score %}selected{% endif %}>
+                                {{ score }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            
+            <div class="filter-field">
+                <label>Voted in Elections:</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="v20state" id="v20state" {% if current_v20state %}checked{% endif %}>
+                        <label for="v20state">2020 State</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="v21town" id="v21town" {% if current_v21town %}checked{% endif %}>
+                        <label for="v21town">2021 Town</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="v21primary" id="v21primary" {% if current_v21primary %}checked{% endif %}>
+                        <label for="v21primary">2021 Primary</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="v22general" id="v22general" {% if current_v22general %}checked{% endif %}>
+                        <label for="v22general">2022 General</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="v23town" id="v23town" {% if current_v23town %}checked{% endif %}>
+                        <label for="v23town">2023 Town</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 15px;">
+                <button type="submit">Filter</button>
+                <a href="{% url 'voter_analytics:voters' %}" class="reset-link">Reset Filters</a>
+            </div>
+        </form>
+    </div>
+    
+    <div class="results-count">
+        Showing {{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count }} voters
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Street Address</th>
+                <th>Date of Birth</th>
+                <th>Party</th>
+                <th>Voter Score</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for voter in voters %}
+            <tr>
+                <td>{{ voter.first_name }}</td>
+                <td>{{ voter.last_name }}</td>
+                <td>{{ voter.street_number }} {{ voter.street_name }}
+                    {% if voter.apartment_number %}Apt {{ voter.apartment_number }}{% endif %}
+                </td>
+                <td>{{ voter.date_of_birth|date:"m/d/Y" }}</td>
+                <td>{{ voter.party_affiliation }}</td>
+                <td>{{ voter.voter_score }}</td>
+                <td><a href="{% url 'voter_analytics:voter' voter.pk %}">View Details</a></td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" style="text-align: center;">No voters found matching your criteria.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page=1">First</a>
+            <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+        
+        <span class="current">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        
+        {% if page_obj.has_next %}
+            <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}">Next</a>
+            <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.paginator.num_pages }}">Last</a>
+        {% endif %}
+    </div>
+</body>
+</html>
