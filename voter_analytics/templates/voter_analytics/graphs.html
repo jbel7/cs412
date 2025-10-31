@@ -3,218 +3,123 @@
 <!-- BU Email: belsanyj@bu.edu -->
 <!-- Description: Template for displaying voter data visualizations with filtering -->
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voter Analytics - Graphs</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f5f5f5;
-        }
-        h1 {
-            color: #333;
-        }
-        .nav-links {
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: white;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .nav-links a {
-            color: #007bff;
-            text-decoration: none;
-            margin-right: 20px;
-            font-weight: bold;
-        }
-        .nav-links a:hover {
-            text-decoration: underline;
-        }
-        .filter-form {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .filter-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        .filter-field {
-            display: flex;
-            flex-direction: column;
-        }
-        label {
-            font-weight: bold;
-            margin-bottom: 5px;
-            font-size: 14px;
-        }
-        select, input[type="checkbox"] {
-            padding: 5px;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-        }
-        .checkbox-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        button {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .reset-link {
-            margin-left: 10px;
-            color: #007bff;
-            text-decoration: none;
-        }
-        .reset-link:hover {
-            text-decoration: underline;
-        }
-        .graph-container {
-            background-color: white;
-            padding: 20px;
-            margin-bottom: 30px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .plotly-graph-div {
-            width: 100%;
-            height: auto;
-        }
-    </style>
-</head>
-<body>
-    <h1>Newton Voter Analytics - Graphs</h1>
-    
-    <div class="nav-links">
-        <a href="{% url 'voter_analytics:voters' %}">📊 Voter List</a>
-        <a href="{% url 'voter_analytics:graphs' %}">📈 Graphs</a>
-    </div>
-    
-    <div class="filter-form">
-        <h2>Filter Voters</h2>
-        <form method="get">
-            <div class="filter-row">
-                <div class="filter-field">
-                    <label for="party_affiliation">Party Affiliation:</label>
-                    <select name="party_affiliation" id="party_affiliation">
-                        <option value="">All Parties</option>
-                        {% for party in party_affiliations %}
-                            <option value="{{ party }}" {% if party == current_party %}selected{% endif %}>
-                                {{ party }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-                
-                <div class="filter-field">
-                    <label for="min_birth_year">Min Birth Year:</label>
-                    <select name="min_birth_year" id="min_birth_year">
-                        <option value="">No Minimum</option>
-                        {% for year in birth_years %}
-                            <option value="{{ year }}" {% if year|stringformat:"s" == current_min_year %}selected{% endif %}>
-                                {{ year }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-                
-                <div class="filter-field">
-                    <label for="max_birth_year">Max Birth Year:</label>
-                    <select name="max_birth_year" id="max_birth_year">
-                        <option value="">No Maximum</option>
-                        {% for year in birth_years %}
-                            <option value="{{ year }}" {% if year|stringformat:"s" == current_max_year %}selected{% endif %}>
-                                {{ year }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-                
-                <div class="filter-field">
-                    <label for="voter_score">Voter Score:</label>
-                    <select name="voter_score" id="voter_score">
-                        <option value="">Any Score</option>
-                        {% for score in voter_scores %}
-                            <option value="{{ score }}" {% if score|stringformat:"s" == current_voter_score %}selected{% endif %}>
-                                {{ score }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
+{% extends 'voter_analytics/base.html' %}
+
+{% block title %}Graphs - Newton Voter Analytics{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1>📈 Voter Analytics Graphs</h1>
+    <p>Visual insights into Newton's voter demographics and participation</p>
+</div>
+
+<div class="nav-links">
+    <a href="{% url 'voter_analytics:voters' %}">📊 Voter List</a>
+    <a href="{% url 'voter_analytics:graphs' %}" class="active">📈 Graphs</a>
+</div>
+
+<div class="filter-form">
+    <h2>🔍 Filter Data</h2>
+    <form method="get">
+        <div class="filter-row">
+            <div class="filter-field">
+                <label for="party_affiliation">Party Affiliation:</label>
+                <select name="party_affiliation" id="party_affiliation">
+                    <option value="">All Parties</option>
+                    {% for party in party_affiliations %}
+                        <option value="{{ party }}" {% if party == current_party %}selected{% endif %}>
+                            {{ party }}
+                        </option>
+                    {% endfor %}
+                </select>
             </div>
             
             <div class="filter-field">
-                <label>Voted in Elections:</label>
-                <div class="checkbox-group">
-                    <div class="checkbox-item">
-                        <input type="checkbox" name="v20state" id="v20state" {% if current_v20state %}checked{% endif %}>
-                        <label for="v20state">2020 State</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" name="v21town" id="v21town" {% if current_v21town %}checked{% endif %}>
-                        <label for="v21town">2021 Town</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" name="v21primary" id="v21primary" {% if current_v21primary %}checked{% endif %}>
-                        <label for="v21primary">2021 Primary</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" name="v22general" id="v22general" {% if current_v22general %}checked{% endif %}>
-                        <label for="v22general">2022 General</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" name="v23town" id="v23town" {% if current_v23town %}checked{% endif %}>
-                        <label for="v23town">2023 Town</label>
-                    </div>
-                </div>
+                <label for="min_birth_year">Min Birth Year:</label>
+                <select name="min_birth_year" id="min_birth_year">
+                    <option value="">No Minimum</option>
+                    {% for year in birth_years %}
+                        <option value="{{ year }}" {% if year|stringformat:"s" == current_min_year %}selected{% endif %}>
+                            {{ year }}
+                        </option>
+                    {% endfor %}
+                </select>
             </div>
             
-            <div style="margin-top: 15px;">
-                <button type="submit">Update Graphs</button>
-                <a href="{% url 'voter_analytics:graphs' %}" class="reset-link">Reset Filters</a>
+            <div class="filter-field">
+                <label for="max_birth_year">Max Birth Year:</label>
+                <select name="max_birth_year" id="max_birth_year">
+                    <option value="">No Maximum</option>
+                    {% for year in birth_years %}
+                        <option value="{{ year }}" {% if year|stringformat:"s" == current_max_year %}selected{% endif %}>
+                            {{ year }}
+                        </option>
+                    {% endfor %}
+                </select>
             </div>
-        </form>
-    </div>
-    
-    <div class="graph-container">
-        <h2>Distribution by Year of Birth</h2>
-        {{ birth_year_graph|safe }}
-    </div>
-    
-    <div class="graph-container">
-        <h2>Distribution by Party Affiliation</h2>
-        {{ party_affiliation_graph|safe }}
-    </div>
-    
-    <div class="graph-container">
-        <h2>Voter Participation by Election</h2>
-        {{ election_participation_graph|safe }}
-    </div>
-    
-    <div class="nav-links">
-        <a href="{% url 'voter_analytics:voters' %}">← Back to Voter List</a>
-    </div>
-</body>
-</html>
+            
+            <div class="filter-field">
+                <label for="voter_score">Voter Score:</label>
+                <select name="voter_score" id="voter_score">
+                    <option value="">Any Score</option>
+                    {% for score in voter_scores %}
+                        <option value="{{ score }}" {% if score|stringformat:"s" == current_voter_score %}selected{% endif %}>
+                            {{ score }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        
+        <div class="filter-field">
+            <label>Voted in Elections:</label>
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" name="v20state" id="v20state" {% if current_v20state %}checked{% endif %}>
+                    <label for="v20state">2020 State</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" name="v21town" id="v21town" {% if current_v21town %}checked{% endif %}>
+                    <label for="v21town">2021 Town</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" name="v21primary" id="v21primary" {% if current_v21primary %}checked{% endif %}>
+                    <label for="v21primary">2021 Primary</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" name="v22general" id="v22general" {% if current_v22general %}checked{% endif %}>
+                    <label for="v22general">2022 General</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" name="v23town" id="v23town" {% if current_v23town %}checked{% endif %}>
+                    <label for="v23town">2023 Town</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="button-group">
+            <button type="submit">Update Graphs</button>
+            <a href="{% url 'voter_analytics:graphs' %}" class="reset-link">Reset Filters</a>
+        </div>
+    </form>
+</div>
+
+<div class="graph-container">
+    <h2>📊 Distribution by Year of Birth</h2>
+    {{ birth_year_graph|safe }}
+</div>
+
+<div class="graph-container">
+    <h2>🥧 Distribution by Party Affiliation</h2>
+    {{ party_affiliation_graph|safe }}
+</div>
+
+<div class="graph-container">
+    <h2>📊 Voter Participation by Election</h2>
+    {{ election_participation_graph|safe }}
+</div>
+
+<div class="nav-links">
+    <a href="{% url 'voter_analytics:voters' %}">← Back to Voter List</a>
+</div>
+{% endblock %}
